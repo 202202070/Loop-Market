@@ -7,7 +7,7 @@ and product comparisons to help customers make informed choices.
 
 
 # Team Members
-Ahmed Abouelela- Developer
+Ahmed Abouelela- Developer (Team Leader)
 
 Mohamed Maher - Developer
 
