@@ -53,7 +53,7 @@ def show_cart():
     for item in cart:
         amount += item.product.current_price * item.quantity
 
-    return render_template('cart.html', cart=cart, amount=amount, total=amount+200)
+    return render_template('cart.html', cart=cart, amount=amount, total=amount+50)
 
 
 @views.route('/pluscart')
@@ -75,7 +75,7 @@ def plus_cart():
         data = {
             'quantity': cart_item.quantity,
             'amount': amount,
-            'total': amount + 200
+            'total': amount + 50
         }
 
         return jsonify(data)
@@ -98,7 +98,7 @@ def minus_cart():
         data = {
             'quantity': cart_item.quantity,
             'amount': amount,
-            'total': amount + 200
+            'total': amount + 50
         }
 
         return jsonify(data)
@@ -121,7 +121,7 @@ def remove_cart():
         data = {
             'quantity': cart_item.quantity,
             'amount': amount,
-            'total': amount + 200
+            'total': amount + 50
         }
 
         return jsonify(data)
