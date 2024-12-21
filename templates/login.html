@@ -6,7 +6,7 @@
 
 <!-- Login section start -->
 
-<section class="base" id="base-signup">
+<section class="base" id="base-login">
     <div class="base-content">
         <div class="form">
             <h3>
@@ -20,10 +20,12 @@
                 <div class="email"><h4>Email Address</h4>{{ form.email }} <hr></div>
                 <div class="password"><h4>Password</h4>{{ form.password }} <hr></div>
 
-                <div class="buttons">
+                <div class="buttons" id = "wp-submit">
                     <a href="/sign-up"> SignUp</a>
                     {{ form.submit() }}
+                    
                 </div>
+
 
 
             </form>

@@ -10,7 +10,7 @@ admin=Blueprint('admin', __name__)
 
 @admin.route('/media/<path:filename>')
 def get_image(filename):
-    return send_from_directory('D:\VS Code\PYTHON\Loop-Market\media', filename)
+    return send_from_directory('D:\Loop-Market\media', filename)
 
 @admin.route('/add-shop-items', methods=['GET', 'POST'])
 @login_required
