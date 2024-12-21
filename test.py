@@ -1,25 +1,36 @@
-import unittest
-from flask import Flask
-from __init_py__ import create_app  
-from __init_py__ import db
-from models import Product, Cart, Order, Customer
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
-class TestViews(unittest.TestCase):
+# Define your credentials
+EMAIL = 'admin@gmail.com'
+PASSWORD = '111111'
 
-    def setUp(self):
-        self.app = create_app({'TESTING': True, 'SQLALCHEMY_DATABASE_URI': 'sqlite:///:memory:'})
-        self.client = self.app.test_client()
-        self.app_context = self.app.app_context()
-        self.app_context.push()
-        db.create_all()
+# Initialize Chrome WebDriver (assuming chromedriver.exe is in the current directory or in PATH)
+service = Service('chromedriver.exe')  # Ensure chromedriver.exe is in the specified path
+driver = webdriver.Chrome(service=service)  # Initialize the Chrome WebDriver
 
-        
-        self.customer = Customer(id=1, name='firstadmin', email='admin@gmail.com')
-        self.product = Product(id=1, product_name='Big chips Sour & Cream', current_price=15.0, in_stock=100)
-        db.session.add(self.customer)
-        db.session.add(self.product)
-        db.session.commit()
+# Navigate to the login page
+driver.get('http://127.0.0.1:5000/login')
 
-    
-if __name__ == '__main__':
-    unittest.main()
+# Wait for the elements to be present on the page
+wait = WebDriverWait(driver, 200)  # 10 seconds timeout
+
+# Locate and fill the login form
+user_input = wait.until(EC.presence_of_element_located((By.ID, "email")))  # Wait for 'user_login' to be visible
+user_input.send_keys(EMAIL)
+
+password_input = wait.until(EC.presence_of_element_located((By.ID, "password")))  # Wait for 'user_pass' to be visible
+password_input.send_keys(PASSWORD)
+
+# Click the login button
+login_button = wait.until(EC.element_to_be_clickable((By.ID, "wp-submit")))  # Wait for 'wp-submit' button to be clickable
+login_button.click()
+
+# Print the title of the page after login
+print("Page title after login:", driver.title)
+
+# Close the browser after testing
+driver.quit()
