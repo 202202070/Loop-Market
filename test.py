@@ -1,25 +1,41 @@
-import unittest
-from flask import Flask
-from __init_py__ import create_app  
-from __init_py__ import db
-from models import Product, Cart, Order, Customer
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
-class TestViews(unittest.TestCase):
+EMAIL = 'admin@gmail.com'
+PASSWORD = '111111'
 
-    def setUp(self):
-        self.app = create_app({'TESTING': True, 'SQLALCHEMY_DATABASE_URI': 'sqlite:///:memory:'})
-        self.client = self.app.test_client()
-        self.app_context = self.app.app_context()
-        self.app_context.push()
-        db.create_all()
+service = Service('chromedriver.exe')  
+driver = webdriver.Chrome(service=service)  
 
-        
-        self.customer = Customer(id=1, name='firstadmin', email='admin@gmail.com')
-        self.product = Product(id=1, product_name='Big chips Sour & Cream', current_price=15.0, in_stock=100)
-        db.session.add(self.customer)
-        db.session.add(self.product)
-        db.session.commit()
+wait = WebDriverWait(driver, 50)  
+
+try:
+    
+    driver.get('http://127.0.0.1:5000/login')
+
+  
+    email_input = wait.until(EC.presence_of_element_located((By.ID, "email")))  
+    email_input.send_keys(EMAIL)
+
+    password_input = wait.until(EC.presence_of_element_located((By.ID, "password"))) 
+    password_input.send_keys(PASSWORD)
 
     
-if __name__ == '__main__':
-    unittest.main()
+    login_button = wait.until(EC.element_to_be_clickable((By.ID, "submit")))  
+    login_button.click()
+
+  
+    wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'container')))  
+  
+    driver.save_screenshot('login_screenshot1.png')  
+
+    print("Page title after login:", driver.title)
+
+except Exception as e:
+    print("An error occurred:", e)
+
+
+driver.quit()
