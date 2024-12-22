@@ -4,33 +4,41 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-# Define your credentials
 EMAIL = 'admin@gmail.com'
 PASSWORD = '111111'
 
-# Initialize Chrome WebDriver (assuming chromedriver.exe is in the current directory or in PATH)
-service = Service('chromedriver.exe')  # Ensure chromedriver.exe is in the specified path
-driver = webdriver.Chrome(service=service)  # Initialize the Chrome WebDriver
+service = Service('chromedriver.exe')  
+driver = webdriver.Chrome(service=service)  
 
-# Navigate to the login page
-driver.get('http://127.0.0.1:5000/login')
 
-# Wait for the elements to be present on the page
-wait = WebDriverWait(driver, 200)  # 10 seconds timeout
 
-# Locate and fill the login form
-user_input = wait.until(EC.presence_of_element_located((By.ID, "email")))  # Wait for 'user_login' to be visible
-user_input.send_keys(EMAIL)
+wait = WebDriverWait(driver, 5)  
 
-password_input = wait.until(EC.presence_of_element_located((By.ID, "password")))  # Wait for 'user_pass' to be visible
-password_input.send_keys(PASSWORD)
+try:
+    
+    driver.get('http://127.0.0.1:5000/login')
 
-# Click the login button
-login_button = wait.until(EC.element_to_be_clickable((By.ID, "wp-submit")))  # Wait for 'wp-submit' button to be clickable
-login_button.click()
+  
+    email_input = wait.until(EC.presence_of_element_located((By.ID, "email")))  
+    email_input.send_keys(EMAIL)
 
-# Print the title of the page after login
-print("Page title after login:", driver.title)
+    password_input = wait.until(EC.presence_of_element_located((By.ID, "password"))) 
+    password_input.send_keys(PASSWORD)
 
-# Close the browser after testing
+    
+    login_button = wait.until(EC.element_to_be_clickable((By.ID, "submit")))  
+    login_button.click()
+
+  
+    wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'container')))  
+  
+    driver.save_screenshot('login_screenshot1.png')  
+
+    print("Page title after login:", driver.title)
+
+except Exception as e:
+    print("An error occurred:", e)
+    driver.save_screenshot('error login.png')  # Save screenshot for debugging
+    print("Error screenshot saved as 'error login.png'.")
+
 driver.quit()
