@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, flash, redirect, request, jsonify
-from models import Product, Order, Customer , Cart
+from models import Product, Order, Customer , Cart, Wishlist
 from flask_login import login_required, current_user
 from __init_py__ import db
 import secrets
@@ -53,7 +53,7 @@ def show_cart():
     for item in cart:
         amount += item.product.current_price * item.quantity
 
-    return render_template('cart.html', cart=cart, amount=amount, total=amount+50)
+    return render_template('cart.html', cart=cart, amount=amount, total=amount+200)
 
 
 @views.route('/pluscart')
@@ -75,7 +75,7 @@ def plus_cart():
         data = {
             'quantity': cart_item.quantity,
             'amount': amount,
-            'total': amount + 50
+            'total': amount + 200
         }
 
         return jsonify(data)
@@ -98,7 +98,7 @@ def minus_cart():
         data = {
             'quantity': cart_item.quantity,
             'amount': amount,
-            'total': amount + 50
+            'total': amount + 200
         }
 
         return jsonify(data)
@@ -121,7 +121,7 @@ def remove_cart():
         data = {
             'quantity': cart_item.quantity,
             'amount': amount,
-            'total': amount + 50
+            'total': amount + 200
         }
 
         return jsonify(data)
@@ -189,3 +189,35 @@ def search():
                            if current_user.is_authenticated else [])
 
     return render_template('search.html')
+
+
+# Route to add product to wishlist
+@views.route('/add-to-wishlist/<int:item_id>')
+@login_required
+def add_to_wishlist(item_id):
+    product_to_add = Product.query.get(item_id)
+    if not product_to_add:
+        flash('Product not found')
+        return redirect(request.referrer)
+    item_to_add = Product.query.get(item_id)
+
+    # Check if the product is already in the wishlist
+    existing_wishlist_item = Wishlist.query.filter_by(product_link=item_id, customer_link=current_user.id).first()
+    
+    if existing_wishlist_item:
+        flash(f'{product_to_add.product_name} is already in your wishlist.')
+    else:
+        # Add the product to the wishlist
+        new_wishlist_item = Wishlist(customer_link=current_user.id, product_link=item_id)
+        db.session.add(new_wishlist_item)
+        db.session.commit()
+        flash(f'{product_to_add.product_name} added to your wishlist.')
+
+    return redirect(request.referrer)
+
+# Route to display wishlist
+@views.route('/wishlist')
+@login_required
+def wishlist():
+    wishlist_items = Wishlist.query.filter_by(customer_link=current_user.id).all()
+    return render_template('wishlist.html', wishlist_items=wishlist_items)

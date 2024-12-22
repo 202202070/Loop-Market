@@ -1,0 +1,62 @@
+
+{% extends 'base.html' %}
+
+{% block title %} Wish List {% endblock %}
+
+
+{% block body %}
+
+<div class="container my-5">
+    <div class="row">
+        {% if wish %}
+
+        <h1 class="text-center mb-5" style="color: white;">My Wish List</h1>
+        <div class="col-sm-8">
+            <div class="card">
+                <div class="card-body">
+
+                    {% for item in wish %}
+
+                    <div class="row">
+                        <div class="col-sm-3 text-center align-self-center">
+                            <img src="{{ item.product.product_picture }}" alt="" class="img-fluid img-thumbnail shadow-sm" height="150px" width="150px">
+                        </div>
+                        <div class="col-sm-9">
+                            <div>
+                                <h3>{{ item.product.product_name }}</h3>
+                                <div class="my-3">
+                                    <label for="quantity">Quantity</label>
+                                    <a class="minus-cart btn" pid="{{item.id}}"><i class="fas fa-minus-square fa-lg"></i></a>
+                                    <span id="quantity">{{ item.quantity }}</span>
+                                    <a class="plus-cart btn " pid="{{ item.id }}"><i class="fas fa-plus-square fa-lg"></i></a>
+
+                                </div>
+
+                                <div class="d-flex justify-content-between">
+                                    <p class="mb-0"><span><strong>EGP {{ item.product.current_price }}</strong></span></p>
+                                    <a href="" class="remove-cart btn btn-sm btn-secondary mr-3 " pid="{{item.id}}">Remove</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        
+
+
+
+        {% else %}
+
+        <h1 class="text-center mb-5" style="color: white;">Your Wish is Empty</h1>
+
+        {% endif %}
+    </div>
+</div>
+
+
+{% endblock %}
