@@ -78,3 +78,12 @@ class Order(db.Model):
 
     def __str__(self):
         return '<Order %r>' % self.id
+    
+class Wishlist(db.Model):
+    
+    id = db.Column(db.Integer, primary_key=True)
+    customer_link = db.Column(db.Integer, db.ForeignKey('customer.id'), nullable=False)
+    product_link = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
+
+    def _str_(self):
+        return f"<Wishlist {self.product.product_name} for {self.customer.username}>"

@@ -2,8 +2,13 @@ from flask import Flask,render_template
 from flask import Blueprint
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from flask_migrate import Migrate
+
+# Initialize the database and migrate obje
+
 
 db = SQLAlchemy()
+migrate = Migrate(db)
 DB_NAME = 'database.sqlite3'
 
 
@@ -36,15 +41,15 @@ def create_app():
     from views import views
     from auth import auth
     from admin import admin
-    from models import Customer, Cart, Product, Order
+    from models import Customer, Cart, Product, Order, Wishlist
     app.register_blueprint(views,url_prefix="/")
     app.register_blueprint(auth,url_prefix="/")
     app.register_blueprint(admin,url_prefix="/")
 
 
 
-    # with app.app_context():
-    #     create_database()
+    with app.app_context():
+        create_database()
 
 
     return app
